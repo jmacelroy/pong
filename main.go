@@ -22,5 +22,5 @@ func helloServer(w http.ResponseWriter, r *http.Request) {
 			log.Printf("%v: %v\n", name, h)
 		}
 	}
-	fmt.Fprint(w, "Hello planet earth!")
+	fmt.Fprint(w, "----> PiNg")
 }

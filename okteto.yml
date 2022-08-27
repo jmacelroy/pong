@@ -8,3 +8,4 @@ deploy:
 
 dependencies:
   - https://github.com/jmacelroy/traefik-sample
+  - https://github.com/jmacelroy/auth

@@ -65,6 +65,8 @@ spec:
   routes:
     - kind: Rule
       match: Host(`pong-${OKTETO_NAMESPACE}.jdm.okteto.net`)
+      middlewares:
+      - name: forward-auth
       services:
       - kind: Service
         name: pong
