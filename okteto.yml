@@ -1,0 +1,10 @@
+build:
+  pong:
+    context: ./
+
+deploy:
+  - name: Install manifests for pong example
+    command: cat k8s.yml | envsubst | kubectl apply -f -
+
+dependencies:
+  - https://github.com/jmacelroy/traefik-sample

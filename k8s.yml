@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong
+  template:
+    metadata:
+      labels:
+        app: pong
+    spec:
+      containers:
+      - image: ${OKTETO_BUILD_PONG_IMAGE}
+        name: pong
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pong
+spec:
+  type: ClusterIP
+  ports:
+  - name: "pong"
+    port: 8080
+  selector:
+    app: pong
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pong
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: pong-${OKTETO_NAMESPACE}.jdm.okteto.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - pong-${OKTETO_NAMESPACE}.jdm.okteto.net
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pong-traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`pong-${OKTETO_NAMESPACE}.jdm.okteto.net`)
+      services:
+      - kind: Service
+        name: pong
+        port: 8080
